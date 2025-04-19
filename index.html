@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>食物 API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f4f4f4;
+      text-align: center;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🍽️ 食物清單</h1>
+  <ul id="food-list"></ul>
+
+  <script>
+    fetch('/api/foods')
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('food-list');
+        data.forEach(food => {
+          const item = document.createElement('li');
+          item.textContent = `${food.name} - 來自 ${food.origin}`;
+          list.appendChild(item);
+        });
+      })
+      .catch(err => {
+        console.error('發生錯誤:', err);
+      });
+  </script>
+</body>
+</html>
