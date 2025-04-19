@@ -1,44 +1,75 @@
+
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>食物 API</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>食物清單</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 2rem;
+      font-family: 'Arial', sans-serif;
       background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
       text-align: center;
     }
+
     h1 {
+      font-size: 2em;
       color: #2c3e50;
     }
-    ul {
-      list-style: none;
+
+    .food-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 30px;
       padding: 0;
     }
-    li {
-      margin: 0.5rem 0;
+
+    .food-item {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+
+    .food-item h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .food-item p {
+      margin: 0;
+      font-size: 14px;
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <h1>🍽️ 食物清單</h1>
-  <ul id="food-list"></ul>
+  <h1>🍽 食物清單</h1>
+  <div id="food-list" class="food-list"></div>
 
   <script>
-    fetch('/api/foods')
+    fetch('https://my-food-api-xxxx.onrender.com/api/foods') // <== 這裡請替換成你實際的 API 網址
       .then(res => res.json())
       .then(data => {
         const list = document.getElementById('food-list');
-        data.forEach(food => {
-          const item = document.createElement('li');
-          item.textContent = `${food.name} - 來自 ${food.origin}`;
-          list.appendChild(item);
+        data.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'food-item';
+          div.innerHTML = `
+            <h3>${item.name}</h3>
+            <p>熱量：${item.calories} 卡</p>
+            <p>蛋白質：${item.protein}g，脂肪：${item.fat}g，碳水：${item.carbs}g</p>
+          `;
+          list.appendChild(div);
         });
       })
-      .catch(err => {
-        console.error('發生錯誤:', err);
+      .catch(error => {
+        document.getElementById('food-list').innerText = '❌ 無法載入資料，請稍後再試。';
+        console.error('Fetch error:', error);
       });
   </script>
 </body>
